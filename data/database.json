@@ -232,7 +232,7 @@
       "averageRating": 5,
       "totalRatingsCount": 0,
       "verified": false,
-      "createdAt": "2026-10-01T06:18:30.628Z"
+      "createdAt": "2026-10-01T06:18:30.628+00:00"
     }
   ],
   "rides": [
@@ -448,15 +448,6 @@
   ],
   "notifications": [
     {
-      "notificationId": 17,
-      "userId": 13,
-      "type": "WELCOME",
-      "title": "Welcome to Carpooling System!",
-      "message": "Hello Test Passenger, your passenger account has been created successfully.",
-      "isRead": false,
-      "createdAt": "2026-10-01T06:18:31.733Z"
-    },
-    {
       "notificationId": 12,
       "userId": 10,
       "type": "WELCOME",
@@ -500,6 +491,15 @@
       "message": "Your request for 1 seat(s) on Chennai (Anna Nagar) → Coimbatore (Gandhipuram) is pending.",
       "isRead": false,
       "createdAt": "2026-09-30T17:33:45.494+00:00"
+    },
+    {
+      "notificationId": 17,
+      "userId": 13,
+      "type": "WELCOME",
+      "title": "Welcome to Carpooling System!",
+      "message": "Hello Test Passenger, your passenger account has been created successfully.",
+      "isRead": false,
+      "createdAt": "2026-10-01T06:18:31.733+00:00"
     }
   ],
   "complaints": [

@@ -732,10 +732,11 @@
         </ul>
       </div>
       <div class="footer-links">
-        <h4>System Information</h4>
+        <h4>About</h4>
         <ul>
-          <li><a href="#" onclick="app.openModal('modal-srs-info'); return false;">System Capabilities & Features</a></li>
-          <li><a href="#" onclick="app.openModal('modal-srs-info'); return false;">Safety & Verification Policies</a></li>
+          <li><a href="#" onclick="app.navigate('home'); return false;">Browse Rides</a></li>
+          <li><a href="#" onclick="app.openAuth('register', 'DRIVER'); return false;">Drive with Us</a></li>
+          <li><a href="#" onclick="app.openAuth('register', 'PASSENGER'); return false;">Join as Passenger</a></li>
         </ul>
       </div>
     </div>
@@ -1020,31 +1021,7 @@
     </div>
   </div>
 
-  <!-- SRS INFO MODAL -->
-  <div class="modal-overlay" id="modal-srs-info">
-    <div class="modal-dialog" style="max-width: 650px;">
-      <div class="modal-header">
-        <h3><i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> Platform Architecture & Features</h3>
-        <button class="modal-close" onclick="app.closeModal('modal-srs-info')">&times;</button>
-      </div>
-      <div class="modal-body" style="font-size: 0.88rem; line-height: 1.6;">
-        <p><strong>System Modules Implemented:</strong></p>
-        <ul style="padding-left: 20px; margin: 8px 0 16px;">
-          <li><strong>User Management:</strong> Registration, Role-based auth (Guest, Passenger, Driver, Admin), suspension check, profile updates.</li>
-          <li><strong>Ride Management:</strong> Driver post ride with route/fare/seats, validation, atomic updates, cancellations.</li>
-          <li><strong>Ride Search & Allocation:</strong> Multi-criteria search, route matching, seat filters.</li>
-          <li><strong>Booking Management:</strong> Unique booking records, atomic seat reservation, conflict prevention, driver approvals.</li>
-          <li><strong>Notifications:</strong> Multi-channel booking updates, alerts, fail-safe isolation.</li>
-          <li><strong>Feedback & Ratings:</strong> Completed-ride validated rating (1-5 stars) and driver scores.</li>
-          <li><strong>Administration & Disputes:</strong> User moderation, ride deactivation, complaint arbitration, analytics, JSON backup/restore.</li>
-        </ul>
-        <p>Refer to <code>report.txt</code> for the complete process specifications.</p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary btn-sm" onclick="app.closeModal('modal-srs-info')">Got it</button>
-      </div>
-    </div>
-  </div>
+  <!-- TOAST NOTIFICATION CONTAINER -->
 
   <!-- TOAST NOTIFICATION CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>

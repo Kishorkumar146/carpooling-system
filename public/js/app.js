@@ -84,7 +84,6 @@ class CarpoolApp {
         navLinks.innerHTML = `
           <li><a class="nav-link ${this.currentView === 'home' ? 'active' : ''}" onclick="app.navigate('home')"><i class="fa-solid fa-magnifying-glass"></i> Browse Rides</a></li>
           <li><a class="nav-link ${this.currentView === 'login' ? 'active' : ''}" onclick="app.openAuth('login')"><i class="fa-solid fa-right-to-bracket"></i> Sign In / Register</a></li>
-          <li><a class="nav-link" onclick="app.openModal('modal-srs-info')"><i class="fa-solid fa-circle-info"></i> How It Works</a></li>
         `;
       }
 
@@ -133,7 +132,6 @@ class CarpoolApp {
         linksHtml = `
           <li><a class="nav-link ${this.currentView === 'home' ? 'active' : ''}" onclick="app.navigate('home')"><i class="fa-solid fa-magnifying-glass"></i> Browse Rides</a></li>
           <li><a class="nav-link ${this.currentView === 'passenger' ? 'active' : ''}" onclick="app.navigate('passenger')"><i class="fa-solid fa-ticket"></i> My Bookings</a></li>
-          <li><a class="nav-link" onclick="app.openModal('modal-srs-info')"><i class="fa-solid fa-circle-info"></i> How It Works</a></li>
         `;
         if (heroTag) heroTag.innerHTML = `<i class="fa-solid fa-user-check"></i> Logged In as Passenger (${this.currentUser.name})`;
         if (heroTitle) heroTitle.innerText = `Ready for Your Next Trip, ${this.currentUser.name.split(' ')[0]}?`;
@@ -151,7 +149,6 @@ class CarpoolApp {
         linksHtml = `
           <li><a class="nav-link ${this.currentView === 'driver' ? 'active' : ''}" onclick="app.navigate('driver')"><i class="fa-solid fa-car-side"></i> My Published Rides</a></li>
           <li><a class="nav-link" onclick="app.openModal('modal-post-ride')"><i class="fa-solid fa-plus-circle"></i> Offer New Ride</a></li>
-          <li><a class="nav-link" onclick="app.openModal('modal-srs-info')"><i class="fa-solid fa-circle-info"></i> How It Works</a></li>
         `;
         if (heroTag) heroTag.innerHTML = `<i class="fa-solid fa-car"></i> Logged In as Driver (${this.currentUser.name})`;
         if (heroTitle) heroTitle.innerText = `Publish Rides & Manage Your Vehicle Capacity`;
