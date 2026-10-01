@@ -10,7 +10,7 @@ class CarpoolApp {
     this.currentUser = null;
     this.token = localStorage.getItem('carpool_token') || null;
     this.currentView = 'home';
-    this.selectedLoginMode = 'PASSENGER'; // 'PASSENGER', 'DRIVER', 'GUEST'
+    this.selectedRegisterRole = 'PASSENGER'; // 'PASSENGER' or 'DRIVER'
     this.rides = [];
     this.notifications = [];
     this.charts = {};
@@ -26,7 +26,13 @@ class CarpoolApp {
       this.currentUser = null;
       this.updateAuthUI();
     }
-    await this.loadAllRides();
+    if (this.currentUser && this.currentUser.role === 'DRIVER') {
+      this.navigate('driver');
+    } else if (this.currentUser && this.currentUser.role === 'ADMINISTRATOR') {
+      this.navigate('admin');
+    } else {
+      await this.loadAllRides();
+    }
     this.startNotificationPoller();
   }
 
@@ -63,16 +69,21 @@ class CarpoolApp {
       if (notifWrapper) notifWrapper.style.display = 'none';
       if (authActions) {
         authActions.innerHTML = `
-          <button class="btn btn-primary btn-sm" onclick="app.navigate('login')">
-            <i class="fa-solid fa-right-to-bracket"></i> Login / Portals
-          </button>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-outline btn-sm" onclick="app.openAuth('login')">
+              <i class="fa-solid fa-right-to-bracket"></i> Sign In
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="app.openAuth('register')">
+              <i class="fa-solid fa-user-plus"></i> Join Now
+            </button>
+          </div>
         `;
       }
 
       if (navLinks) {
         navLinks.innerHTML = `
           <li><a class="nav-link ${this.currentView === 'home' ? 'active' : ''}" onclick="app.navigate('home')"><i class="fa-solid fa-magnifying-glass"></i> Browse Rides</a></li>
-          <li><a class="nav-link ${this.currentView === 'login' ? 'active' : ''}" onclick="app.navigate('login')"><i class="fa-solid fa-user-shield"></i> Choose Portal</a></li>
+          <li><a class="nav-link ${this.currentView === 'login' ? 'active' : ''}" onclick="app.openAuth('login')"><i class="fa-solid fa-right-to-bracket"></i> Sign In / Register</a></li>
           <li><a class="nav-link" onclick="app.openModal('modal-srs-info')"><i class="fa-solid fa-circle-info"></i> How It Works</a></li>
         `;
       }
@@ -81,8 +92,8 @@ class CarpoolApp {
       if (heroTitle) heroTitle.innerText = `Share Your Journey, Cut Costs, Travel Together`;
       if (heroActions) {
         heroActions.innerHTML = `
-          <button class="btn btn-primary btn-lg" onclick="app.navigate('login')">
-            <i class="fa-solid fa-right-to-bracket"></i> Select Portal / Login
+          <button class="btn btn-primary btn-lg" onclick="app.openAuth('login')">
+            <i class="fa-solid fa-right-to-bracket"></i> Get Started / Sign In
           </button>
           <button class="btn btn-outline btn-lg" style="color: white; border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.1);" onclick="document.getElementById('searchSection').scrollIntoView({behavior: 'smooth'})">
             <i class="fa-solid fa-magnifying-glass"></i> Browse Available Rides
@@ -116,13 +127,13 @@ class CarpoolApp {
       }
 
       // Build Navigation Links based on role
-      let linksHtml = `
-        <li><a class="nav-link ${this.currentView === 'home' ? 'active' : ''}" onclick="app.navigate('home')"><i class="fa-solid fa-magnifying-glass"></i> Browse Rides</a></li>
-      `;
+      let linksHtml = '';
 
       if (role === 'PASSENGER') {
-        linksHtml += `
+        linksHtml = `
+          <li><a class="nav-link ${this.currentView === 'home' ? 'active' : ''}" onclick="app.navigate('home')"><i class="fa-solid fa-magnifying-glass"></i> Browse Rides</a></li>
           <li><a class="nav-link ${this.currentView === 'passenger' ? 'active' : ''}" onclick="app.navigate('passenger')"><i class="fa-solid fa-ticket"></i> My Bookings</a></li>
+          <li><a class="nav-link" onclick="app.openModal('modal-srs-info')"><i class="fa-solid fa-circle-info"></i> How It Works</a></li>
         `;
         if (heroTag) heroTag.innerHTML = `<i class="fa-solid fa-user-check"></i> Logged In as Passenger (${this.currentUser.name})`;
         if (heroTitle) heroTitle.innerText = `Ready for Your Next Trip, ${this.currentUser.name.split(' ')[0]}?`;
@@ -137,8 +148,10 @@ class CarpoolApp {
           `;
         }
       } else if (role === 'DRIVER') {
-        linksHtml += `
-          <li><a class="nav-link ${this.currentView === 'driver' ? 'active' : ''}" onclick="app.navigate('driver')"><i class="fa-solid fa-gauge-high"></i> Driver Desk</a></li>
+        linksHtml = `
+          <li><a class="nav-link ${this.currentView === 'driver' ? 'active' : ''}" onclick="app.navigate('driver')"><i class="fa-solid fa-car-side"></i> My Published Rides</a></li>
+          <li><a class="nav-link" onclick="app.openModal('modal-post-ride')"><i class="fa-solid fa-plus-circle"></i> Offer New Ride</a></li>
+          <li><a class="nav-link" onclick="app.openModal('modal-srs-info')"><i class="fa-solid fa-circle-info"></i> How It Works</a></li>
         `;
         if (heroTag) heroTag.innerHTML = `<i class="fa-solid fa-car"></i> Logged In as Driver (${this.currentUser.name})`;
         if (heroTitle) heroTitle.innerText = `Publish Rides & Manage Your Vehicle Capacity`;
@@ -153,10 +166,11 @@ class CarpoolApp {
           `;
         }
       } else if (role === 'ADMINISTRATOR') {
-        linksHtml += `
-          <li><a class="nav-link ${this.currentView === 'passenger' ? 'active' : ''}" onclick="app.navigate('passenger')"><i class="fa-solid fa-ticket"></i> Passenger View</a></li>
-          <li><a class="nav-link ${this.currentView === 'driver' ? 'active' : ''}" onclick="app.navigate('driver')"><i class="fa-solid fa-car"></i> Driver View</a></li>
+        linksHtml = `
           <li><a class="nav-link ${this.currentView === 'admin' ? 'active' : ''}" onclick="app.navigate('admin')"><i class="fa-solid fa-shield-halved"></i> Admin Console</a></li>
+          <li><a class="nav-link ${this.currentView === 'driver' ? 'active' : ''}" onclick="app.navigate('driver')"><i class="fa-solid fa-car"></i> Driver View</a></li>
+          <li><a class="nav-link ${this.currentView === 'passenger' ? 'active' : ''}" onclick="app.navigate('passenger')"><i class="fa-solid fa-ticket"></i> Passenger View</a></li>
+          <li><a class="nav-link ${this.currentView === 'home' ? 'active' : ''}" onclick="app.navigate('home')"><i class="fa-solid fa-magnifying-glass"></i> Browse Rides</a></li>
         `;
         if (heroTag) heroTag.innerHTML = `<i class="fa-solid fa-shield-halved"></i> Administrator Active Session`;
         if (heroTitle) heroTitle.innerText = `System Administration & Ride Overview`;
@@ -176,76 +190,79 @@ class CarpoolApp {
     }
   }
 
-  // --- DEDICATED LOGIN PORTAL LOGIC ---
-  selectLoginMode(mode) {
-    this.selectedLoginMode = mode;
+  // --- MODERN AUTHENTICATION & PORTAL LOGIC ---
+  openAuth(tab = 'login', role = 'PASSENGER') {
+    this.navigate('login');
+    this.switchAuthTab(tab);
+    if (role) {
+      this.setRegisterRole(role);
+    }
+  }
 
+  // Compatibility alias for existing links
+  selectLoginMode(mode) {
     if (mode === 'GUEST') {
       if (this.currentUser) this.logout();
       this.navigate('home');
       this.showToast('Exploring platform as Guest User.', 'info');
       return;
     }
-
-    this.navigate('login');
-    document.getElementById('modeSelectorGrid').style.display = 'none';
-    document.getElementById('authFormCard').style.display = 'block';
-
-    const badge = document.getElementById('selectedModeBadge');
-    const dedDriverFields = document.getElementById('dedDriverFields');
-
     if (mode === 'DRIVER') {
-      badge.className = 'badge badge-active';
-      badge.innerHTML = '<i class="fa-solid fa-car"></i> Driver Portal Mode';
-      dedDriverFields.style.display = 'block';
+      this.openAuth('register', 'DRIVER');
     } else {
-      badge.className = 'badge badge-role';
-      badge.innerHTML = '<i class="fa-solid fa-user-group"></i> Passenger Portal Mode';
-      dedDriverFields.style.display = 'none';
+      this.openAuth('login', 'PASSENGER');
     }
-
-    // Default to sign in form
-    this.switchAuthTab('login');
-    document.getElementById('dedicatedLoginForm').reset();
-    document.getElementById('dedicatedRegisterForm').reset();
-  }
-
-  backToModeSelection() {
-    document.getElementById('modeSelectorGrid').style.display = 'grid';
-    document.getElementById('authFormCard').style.display = 'none';
   }
 
   switchAuthTab(tab) {
-    const loginForm = document.getElementById('dedicatedLoginForm');
-    const regForm = document.getElementById('dedicatedRegisterForm');
-    const tabLogin = document.getElementById('tabDedicatedLogin');
-    const tabReg = document.getElementById('tabDedicatedRegister');
+    const loginSection = document.getElementById('authLoginSection');
+    const regSection = document.getElementById('authRegisterSection');
+    const tabBtnLogin = document.getElementById('tabBtnLogin');
+    const tabBtnRegister = document.getElementById('tabBtnRegister');
 
     if (tab === 'login') {
-      loginForm.style.display = 'block';
-      regForm.style.display = 'none';
-      tabLogin.classList.add('active');
-      tabReg.classList.remove('active');
+      if (loginSection) loginSection.style.display = 'block';
+      if (regSection) regSection.style.display = 'none';
+      if (tabBtnLogin) tabBtnLogin.classList.add('active');
+      if (tabBtnRegister) tabBtnRegister.classList.remove('active');
     } else {
-      loginForm.style.display = 'none';
-      regForm.style.display = 'block';
-      tabLogin.classList.remove('active');
-      tabReg.classList.add('active');
+      if (loginSection) loginSection.style.display = 'none';
+      if (regSection) regSection.style.display = 'block';
+      if (tabBtnLogin) tabBtnLogin.classList.remove('active');
+      if (tabBtnRegister) tabBtnRegister.classList.add('active');
     }
   }
 
-  fillDemoAccountCredentials() {
-    const emailField = document.getElementById('dedicatedLoginEmail');
-    const passField = document.getElementById('dedicatedLoginPassword');
+  setRegisterRole(role) {
+    this.selectedRegisterRole = role;
+    const choicePassenger = document.getElementById('roleChoicePassenger');
+    const choiceDriver = document.getElementById('roleChoiceDriver');
+    const dedDriverFields = document.getElementById('dedDriverFields');
 
-    if (this.selectedLoginMode === 'DRIVER') {
-      emailField.value = 'rahul@example.com';
-      passField.value = 'password123';
-      this.showToast('Filled credentials for Demo Driver (Rahul).', 'info');
+    if (role === 'DRIVER') {
+      if (choicePassenger) choicePassenger.classList.remove('active');
+      if (choiceDriver) choiceDriver.classList.add('active');
+      if (dedDriverFields) dedDriverFields.style.display = 'block';
     } else {
-      emailField.value = 'priya@example.com';
-      passField.value = 'password123';
-      this.showToast('Filled credentials for Demo Passenger (Priya).', 'info');
+      if (choicePassenger) choicePassenger.classList.add('active');
+      if (choiceDriver) choiceDriver.classList.remove('active');
+      if (dedDriverFields) dedDriverFields.style.display = 'none';
+    }
+  }
+
+  togglePasswordVisibility(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (!input || !icon) return;
+
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
     }
   }
 
@@ -253,6 +270,12 @@ class CarpoolApp {
     e.preventDefault();
     const email = document.getElementById('dedicatedLoginEmail').value.trim();
     const password = document.getElementById('dedicatedLoginPassword').value;
+    const submitBtn = document.getElementById('btnLoginSubmit');
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
+    }
 
     try {
       const res = await fetch(`${API_BASE}/auth/login`, {
@@ -267,8 +290,7 @@ class CarpoolApp {
         localStorage.setItem('carpool_token', data.token);
         this.updateAuthUI();
 
-        // Special dedicated credentials check:
-        // If an administrator logs in (regardless of mode selected), elevate directly to Admin console!
+        // Redirect based on user's authorized role
         if (data.user.role === 'ADMINISTRATOR') {
           this.showToast(`Logged in as Administrator (${data.user.name})`, 'success');
           this.navigate('admin');
@@ -284,6 +306,11 @@ class CarpoolApp {
       }
     } catch (err) {
       this.showToast('Login failed: ' + err.message, 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Sign In to Account</span> <i class="fa-solid fa-arrow-right"></i>';
+      }
     }
   }
 
@@ -293,11 +320,17 @@ class CarpoolApp {
     const email = document.getElementById('dedRegEmail').value.trim();
     const phone = document.getElementById('dedRegPhone').value.trim();
     const password = document.getElementById('dedRegPassword').value;
-    const role = this.selectedLoginMode === 'DRIVER' ? 'DRIVER' : 'PASSENGER';
+    const role = this.selectedRegisterRole || 'PASSENGER';
 
-    const licenseNo = document.getElementById('dedRegLicense').value.trim();
-    const vehicleNo = document.getElementById('dedRegVehicleNo').value.trim();
-    const vehicleType = document.getElementById('dedRegVehicleType').value.trim();
+    const licenseNo = document.getElementById('dedRegLicense') ? document.getElementById('dedRegLicense').value.trim() : '';
+    const vehicleNo = document.getElementById('dedRegVehicleNo') ? document.getElementById('dedRegVehicleNo').value.trim() : '';
+    const vehicleType = document.getElementById('dedRegVehicleType') ? document.getElementById('dedRegVehicleType').value.trim() : '';
+
+    const submitBtn = document.getElementById('btnRegisterSubmit');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
+    }
 
     try {
       const res = await fetch(`${API_BASE}/auth/register`, {
@@ -325,6 +358,11 @@ class CarpoolApp {
       }
     } catch (err) {
       this.showToast('Registration failed: ' + err.message, 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Create Account</span> <i class="fa-solid fa-check"></i>';
+      }
     }
   }
 
@@ -339,6 +377,10 @@ class CarpoolApp {
 
   // --- NAVIGATION ROUTING ---
   navigate(viewName) {
+    if (this.currentUser && this.currentUser.role === 'DRIVER' && (viewName === 'home' || !viewName)) {
+      viewName = 'driver';
+    }
+
     this.currentView = viewName;
 
     document.querySelectorAll('.app-view').forEach(view => {
@@ -351,10 +393,6 @@ class CarpoolApp {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    if (viewName === 'login') {
-      this.backToModeSelection();
-    }
-
     this.updateAuthUI();
 
     if (viewName === 'passenger') {
@@ -365,6 +403,20 @@ class CarpoolApp {
       this.loadAdminData();
     } else if (viewName === 'home') {
       this.loadAllRides();
+    }
+  }
+
+  handleBrandClick() {
+    if (this.currentUser) {
+      if (this.currentUser.role === 'DRIVER') {
+        this.navigate('driver');
+      } else if (this.currentUser.role === 'ADMINISTRATOR') {
+        this.navigate('admin');
+      } else {
+        this.navigate('home');
+      }
+    } else {
+      this.navigate('home');
     }
   }
 

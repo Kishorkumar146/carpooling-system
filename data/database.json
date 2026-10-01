@@ -5,7 +5,7 @@
       "name": "Priya Sharma",
       "email": "priya@example.com",
       "phone": "+91 98765 43210",
-      "password": "$2a$10$wE1UjUv0H1hQhU6qIbg23uG0b6qIhgH3mJ9Oq.qFfCgN.Vj5j9cPe",
+      "password": "$2b$10$etzPTREmHyfpYQ7JLn7tAuclad2m4sP0fApoVVRMjvmVRv5pZxgg6",
       "role": "PASSENGER",
       "status": "ACTIVE",
       "bio": "Tech professional commuting daily. Enjoys quiet and punctual rides.",
@@ -23,7 +23,7 @@
       "name": "Rahul Verma",
       "email": "rahul@example.com",
       "phone": "+91 98123 45678",
-      "password": "$2a$10$wE1UjUv0H1hQhU6qIbg23uG0b6qIhgH3mJ9Oq.qFfCgN.Vj5j9cPe",
+      "password": "$2b$10$etzPTREmHyfpYQ7JLn7tAuclad2m4sP0fApoVVRMjvmVRv5pZxgg6",
       "role": "DRIVER",
       "status": "ACTIVE",
       "bio": "Safe driver with 6+ years experience. AC on, good music, verified profile.",
@@ -41,7 +41,7 @@
       "name": "Arun Sundaram",
       "email": "arun@example.com",
       "phone": "+91 97890 12345",
-      "password": "$2a$10$wE1UjUv0H1hQhU6qIbg23uG0b6qIhgH3mJ9Oq.qFfCgN.Vj5j9cPe",
+      "password": "$2b$10$etzPTREmHyfpYQ7JLn7tAuclad2m4sP0fApoVVRMjvmVRv5pZxgg6",
       "role": "DRIVER",
       "status": "ACTIVE",
       "bio": "Weekend highway traveler. Punctual, non-smoker, spacious luggage boot.",
@@ -59,7 +59,7 @@
       "name": "Administrator",
       "email": "admin@carpool.com",
       "phone": "+91 99000 11223",
-      "password": "$2a$10$wE1UjUv0H1hQhU6qIbg23uG0b6qIhgH3mJ9Oq.qFfCgN.Vj5j9cPe",
+      "password": "$2b$10$etzPTREmHyfpYQ7JLn7tAuclad2m4sP0fApoVVRMjvmVRv5pZxgg6",
       "role": "ADMINISTRATOR",
       "status": "ACTIVE",
       "bio": "Platform System Administrator & Safety Controller",
@@ -77,7 +77,7 @@
       "name": "Kavita Nair",
       "email": "kavita@example.com",
       "phone": "+91 98450 99887",
-      "password": "$2b$10$egHqZG9oLmm/yWSCSnTMVeaQClHqDSZ9L89PPmVZGFKuZHbtOxQIa",
+      "password": "$2b$10$etzPTREmHyfpYQ7JLn7tAuclad2m4sP0fApoVVRMjvmVRv5pZxgg6",
       "role": "PASSENGER",
       "status": "ACTIVE",
       "bio": "Student at university commuting for internships and weekend trips.",
@@ -197,6 +197,42 @@
       "totalRatingsCount": 0,
       "verified": true,
       "createdAt": "2026-09-29T15:41:46.536+00:00"
+    },
+    {
+      "userId": 12,
+      "name": "kishor v",
+      "email": "kishorkumar.vimalraj@gmail.com",
+      "phone": "+917010098630",
+      "password": "$2b$10$WL0rTj9jIDwlYIzvht9PXODMxlGqMkELBon6AZwBt8zItNyUiZo.u",
+      "role": "PASSENGER",
+      "status": "ACTIVE",
+      "bio": "",
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
+      "licenseNo": "",
+      "vehicleNo": "",
+      "vehicleType": "",
+      "averageRating": 5,
+      "totalRatingsCount": 0,
+      "verified": false,
+      "createdAt": "2026-09-30T17:30:58.701+00:00"
+    },
+    {
+      "userId": 13,
+      "name": "Test Passenger",
+      "email": "testuser_1790835510391@example.com",
+      "phone": "+91 99988 77766",
+      "password": "$2b$10$Rq/SeZ5oOC8a4BUhes0KjOmH2VoAZD5bbEkYyhWfzUoykdntXG1ve",
+      "role": "PASSENGER",
+      "status": "ACTIVE",
+      "bio": "",
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
+      "licenseNo": "",
+      "vehicleNo": "",
+      "vehicleType": "",
+      "averageRating": 5,
+      "totalRatingsCount": 0,
+      "verified": false,
+      "createdAt": "2026-10-01T06:18:30.628Z"
     }
   ],
   "rides": [
@@ -365,6 +401,23 @@
       "pickupLocation": "Electronic City Toll Gate",
       "dropLocation": "Guindy Metro Station",
       "notes": "Will have one cabin-sized suitcase."
+    },
+    {
+      "bookingId": 1002,
+      "rideId": 102,
+      "passengerId": 12,
+      "passengerName": "kishor v",
+      "passengerPhone": "+917010098630",
+      "driverId": 3,
+      "driverName": "Arun Sundaram",
+      "seatCount": 1,
+      "totalFare": 750,
+      "status": "PENDING",
+      "statusReason": "",
+      "bookingDate": "2026-09-30T17:33:45.487+00:00",
+      "pickupLocation": "Chennai (Anna Nagar)",
+      "dropLocation": "Coimbatore (Gandhipuram)",
+      "notes": ""
     }
   ],
   "feedbacks": [
@@ -395,6 +448,15 @@
   ],
   "notifications": [
     {
+      "notificationId": 17,
+      "userId": 13,
+      "type": "WELCOME",
+      "title": "Welcome to Carpooling System!",
+      "message": "Hello Test Passenger, your passenger account has been created successfully.",
+      "isRead": false,
+      "createdAt": "2026-10-01T06:18:31.733Z"
+    },
+    {
       "notificationId": 12,
       "userId": 10,
       "type": "WELCOME",
@@ -411,6 +473,33 @@
       "message": "Hello Sivakumar, your driver account has been created successfully.",
       "isRead": false,
       "createdAt": "2026-09-29T15:41:46.818+00:00"
+    },
+    {
+      "notificationId": 14,
+      "userId": 12,
+      "type": "WELCOME",
+      "title": "Welcome to Carpooling System!",
+      "message": "Hello kishor v, your passenger account has been created successfully.",
+      "isRead": false,
+      "createdAt": "2026-09-30T17:31:00.051+00:00"
+    },
+    {
+      "notificationId": 15,
+      "userId": 3,
+      "type": "BOOKING_REQUEST",
+      "title": "New Ride Booking Request",
+      "message": "kishor v requested 1 seat(s) on your ride from Chennai (Anna Nagar) to Coimbatore (Gandhipuram).",
+      "isRead": false,
+      "createdAt": "2026-09-30T17:33:45.491+00:00"
+    },
+    {
+      "notificationId": 16,
+      "userId": 12,
+      "type": "BOOKING_SUBMITTED",
+      "title": "Booking Request Submitted",
+      "message": "Your request for 1 seat(s) on Chennai (Anna Nagar) → Coimbatore (Gandhipuram) is pending.",
+      "isRead": false,
+      "createdAt": "2026-09-30T17:33:45.494+00:00"
     }
   ],
   "complaints": [

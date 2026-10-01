@@ -24,7 +24,7 @@
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="nav-container">
-      <a href="#" class="logo" onclick="app.navigate('home'); return false;">
+      <a href="#" class="logo" onclick="app.handleBrandClick(); return false;">
         <div class="logo-icon"><i class="fa-solid fa-car-tunnel"></i></div>
         <span>Carpool<span style="color: var(--primary);">Go</span></span>
       </a>
@@ -63,137 +63,214 @@
   <!-- MAIN APP CONTENT -->
   <main class="main-content" id="mainApp">
 
-    <!-- VIEW: DEDICATED LOGIN / MODE SELECTOR PAGE -->
+    <!-- VIEW: MODERN LOGIN & SIGNUP PORTAL -->
     <section id="view-login" class="app-view" style="display: none;">
-      <div class="login-portal-wrapper">
-        <div class="login-portal-header">
-          <h2>Welcome to CarpoolGo Portal</h2>
-          <p>Please select your login mode to continue</p>
-        </div>
-
-        <!-- MODE SELECTION CARDS (Guest, Passenger, Driver) - Admin is completely hidden -->
-        <div class="mode-selector-grid" id="modeSelectorGrid">
-          <!-- Mode 1: Passenger -->
-          <div class="mode-card" onclick="app.selectLoginMode('PASSENGER')">
-            <div class="mode-card-icon passenger">
-              <i class="fa-solid fa-user-group"></i>
+      <div class="auth-container">
+        <!-- Brand / Feature Showcase Left Panel -->
+        <div class="auth-brand-panel">
+          <div class="auth-brand-content">
+            <div class="auth-logo-badge">
+              <i class="fa-solid fa-car-tunnel"></i> Carpool<span>Go</span>
             </div>
-            <div class="mode-card-title">Passenger Portal</div>
-            <div class="mode-card-desc">Find reliable carpools, reserve vehicle seats, track trips, and commute economically.</div>
-            <button class="btn btn-primary btn-sm" style="width: 100%;">
-              Enter as Passenger <i class="fa-solid fa-arrow-right"></i>
-            </button>
-          </div>
-
-          <!-- Mode 2: Driver -->
-          <div class="mode-card" onclick="app.selectLoginMode('DRIVER')">
-            <div class="mode-card-icon driver">
-              <i class="fa-solid fa-car-side"></i>
+            <h2>Smart, Sustainable & Affordable Commutes</h2>
+            <p>Connect with verified drivers and passengers. Share routes, split expenses, and travel comfortably everyday.</p>
+            
+            <div class="auth-feature-list">
+              <div class="auth-feature-item">
+                <div class="auth-feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <div>
+                  <strong>100% Verified Profiles</strong>
+                  <p>Government ID & driving license verification</p>
+                </div>
+              </div>
+              <div class="auth-feature-item">
+                <div class="auth-feature-icon"><i class="fa-solid fa-wallet"></i></div>
+                <div>
+                  <strong>Affordable Rides</strong>
+                  <p>Cut daily commute expenses by up to 70%</p>
+                </div>
+              </div>
+              <div class="auth-feature-item">
+                <div class="auth-feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                <div>
+                  <strong>Instant Seat Booking</strong>
+                  <p>Real-time booking and seat status updates</p>
+                </div>
+              </div>
             </div>
-            <div class="mode-card-title">Driver Portal</div>
-            <div class="mode-card-desc">Publish scheduled travel routes, accept passengers, share fuel expenses & manage rides.</div>
-            <button class="btn btn-success btn-sm" style="width: 100%;">
-              Enter as Driver <i class="fa-solid fa-arrow-right"></i>
-            </button>
-          </div>
 
-          <!-- Mode 3: Guest -->
-          <div class="mode-card" onclick="app.selectLoginMode('GUEST')">
-            <div class="mode-card-icon guest">
-              <i class="fa-solid fa-compass"></i>
+            <div class="auth-brand-footer">
+              <span class="auth-stat-pill"><i class="fa-solid fa-users"></i> 10,000+ Commuters</span>
+              <span class="auth-stat-pill"><i class="fa-solid fa-leaf"></i> Eco-Certified</span>
             </div>
-            <div class="mode-card-title">Guest Explorer</div>
-            <div class="mode-card-desc">Browse available rides and discover routes across cities without logging in.</div>
-            <button class="btn btn-outline btn-sm" style="width: 100%;">
-              Browse as Guest <i class="fa-solid fa-arrow-right"></i>
-            </button>
           </div>
         </div>
 
-        <!-- AUTHENTICATION FORM BOX (Displayed once a mode is selected) -->
-        <div class="auth-form-card" id="authFormCard" style="display: none;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <button class="btn btn-outline btn-sm" onclick="app.backToModeSelection()">
-              <i class="fa-solid fa-arrow-left"></i> Change Mode
-            </button>
-            <div class="badge badge-role" id="selectedModeBadge" style="font-size: 0.8rem; padding: 4px 12px;">Passenger Mode</div>
-          </div>
-
-          <!-- Auth Sub-tabs (Login / Register) -->
-          <div class="tabs-nav" style="margin-bottom: 20px;">
-            <button class="tab-link active" id="tabDedicatedLogin" onclick="app.switchAuthTab('login')">
+        <!-- Auth Form Right Panel -->
+        <div class="auth-form-panel">
+          <!-- Auth Tabs Switcher -->
+          <div class="auth-nav-tabs">
+            <button class="auth-tab-btn active" id="tabBtnLogin" onclick="app.switchAuthTab('login')">
               <i class="fa-solid fa-right-to-bracket"></i> Sign In
             </button>
-            <button class="tab-link" id="tabDedicatedRegister" onclick="app.switchAuthTab('register')">
-              <i class="fa-solid fa-user-plus"></i> New Registration
+            <button class="auth-tab-btn" id="tabBtnRegister" onclick="app.switchAuthTab('register')">
+              <i class="fa-solid fa-user-plus"></i> Create Account
             </button>
           </div>
 
           <!-- SIGN IN FORM -->
-          <form id="dedicatedLoginForm" onsubmit="app.handleDedicatedLogin(event)">
-            <div class="form-group" style="margin-bottom: 14px;">
-              <label><i class="fa-regular fa-envelope"></i> Email Address</label>
-              <input type="email" id="dedicatedLoginEmail" class="form-control" placeholder="name@example.com" required>
-            </div>
-            <div class="form-group" style="margin-bottom: 20px;">
-              <label><i class="fa-solid fa-lock"></i> Password</label>
-              <input type="password" id="dedicatedLoginPassword" class="form-control" placeholder="••••••••" required>
-            </div>
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 16px;">
-              <button type="submit" class="btn btn-primary" style="flex: 1;">
-                <i class="fa-solid fa-right-to-bracket"></i> Sign In
-              </button>
-              <button type="button" class="btn btn-outline btn-sm" id="btnQuickFillDemo" onclick="app.fillDemoAccountCredentials()" title="Autofill sample login credentials">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Fill Demo
-              </button>
-            </div>
-            <p style="font-size: 0.78rem; color: var(--text-light); text-align: center;">
-              🔒 Secure SSL Encrypted Session. All roles authenticated automatically.
-            </p>
-          </form>
-
-          <!-- REGISTRATION FORM -->
-          <form id="dedicatedRegisterForm" onsubmit="app.handleDedicatedRegister(event)" style="display: none;">
-            <div class="form-group" style="margin-bottom: 12px;">
-              <label><i class="fa-regular fa-user"></i> Full Name</label>
-              <input type="text" id="dedRegName" class="form-control" placeholder="e.g. Anand Kumar" required>
-            </div>
-            <div class="form-group" style="margin-bottom: 12px;">
-              <label><i class="fa-regular fa-envelope"></i> Email Address</label>
-              <input type="email" id="dedRegEmail" class="form-control" placeholder="anand@example.com" required>
-            </div>
-            <div class="form-group" style="margin-bottom: 12px;">
-              <label><i class="fa-solid fa-phone"></i> Phone Number</label>
-              <input type="tel" id="dedRegPhone" class="form-control" placeholder="+91 98765 00000" required>
+          <div id="authLoginSection" class="auth-section active">
+            <div class="auth-header">
+              <h3>Welcome Back</h3>
+              <p>Sign in to manage your rides, bookings, and dashboard</p>
             </div>
 
-            <!-- Driver-Specific Fields -->
-            <div id="dedDriverFields" style="display: none; background: #f8fafc; padding: 14px; border-radius: var(--radius-md); margin-bottom: 14px; border: 1px dashed var(--border-color);">
-              <h5 style="color: var(--primary); font-size: 0.85rem; margin-bottom: 10px;"><i class="fa-solid fa-id-card"></i> Driver & Vehicle Documentation</h5>
-              <div class="form-group" style="margin-bottom: 8px;">
-                <label>Driving License No.</label>
-                <input type="text" id="dedRegLicense" class="form-control" placeholder="DL-04-2023-XXXX">
+            <form id="dedicatedLoginForm" onsubmit="app.handleDedicatedLogin(event)">
+              <div class="form-group auth-input-group">
+                <label for="dedicatedLoginEmail">Email Address</label>
+                <div class="input-with-icon">
+                  <i class="fa-regular fa-envelope input-leading-icon"></i>
+                  <input type="email" id="dedicatedLoginEmail" class="form-control" placeholder="name@example.com" required autocomplete="email">
+                </div>
               </div>
-              <div class="form-group" style="margin-bottom: 8px;">
-                <label>Vehicle Registration Number</label>
-                <input type="text" id="dedRegVehicleNo" class="form-control" placeholder="TN-01-AB-1234">
+
+              <div class="form-group auth-input-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <label for="dedicatedLoginPassword" style="margin-bottom: 0;">Password</label>
+                  <a href="javascript:void(0)" class="auth-forgot-link" onclick="app.showToast('Please contact your administrator or support to reset your password.', 'info')">Forgot password?</a>
+                </div>
+                <div class="input-with-icon password-field-wrap">
+                  <i class="fa-solid fa-lock input-leading-icon"></i>
+                  <input type="password" id="dedicatedLoginPassword" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+                  <button type="button" class="btn-toggle-password" onclick="app.togglePasswordVisibility('dedicatedLoginPassword', 'loginEyeIcon')" tabindex="-1">
+                    <i class="fa-regular fa-eye" id="loginEyeIcon"></i>
+                  </button>
+                </div>
               </div>
+
+              <button type="submit" class="btn btn-primary auth-submit-btn" id="btnLoginSubmit">
+                <span>Sign In to Account</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+
+              <div class="auth-switch-footer">
+                <span>Don't have an account?</span>
+                <a href="javascript:void(0)" onclick="app.switchAuthTab('register')">Create an account</a>
+              </div>
+            </form>
+          </div>
+
+          <!-- SIGN UP / REGISTRATION FORM -->
+          <div id="authRegisterSection" class="auth-section" style="display: none;">
+            <div class="auth-header">
+              <h3>Create Your Account</h3>
+              <p>Join thousands of travelers sharing affordable journeys</p>
+            </div>
+
+            <form id="dedicatedRegisterForm" onsubmit="app.handleDedicatedRegister(event)">
+              <!-- Role Selector Pills -->
               <div class="form-group">
-                <label>Vehicle Model & Type</label>
-                <input type="text" id="dedRegVehicleType" class="form-control" placeholder="e.g. Sedan (Honda City)">
+                <label style="margin-bottom: 8px; display: block; font-weight: 600;">I want to register as</label>
+                <div class="role-selector-grid">
+                  <div class="role-choice-card active" id="roleChoicePassenger" onclick="app.setRegisterRole('PASSENGER')">
+                    <div class="role-choice-icon passenger"><i class="fa-solid fa-user"></i></div>
+                    <div class="role-choice-info">
+                      <strong>Passenger</strong>
+                      <small>Book rides & commute</small>
+                    </div>
+                  </div>
+                  <div class="role-choice-card" id="roleChoiceDriver" onclick="app.setRegisterRole('DRIVER')">
+                    <div class="role-choice-icon driver"><i class="fa-solid fa-car-side"></i></div>
+                    <div class="role-choice-info">
+                      <strong>Driver</strong>
+                      <small>Offer seats & drive</small>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div class="form-group" style="margin-bottom: 20px;">
-              <label><i class="fa-solid fa-lock"></i> Create Password (Min 6 chars)</label>
-              <input type="password" id="dedRegPassword" class="form-control" placeholder="••••••••" minlength="6" required>
-            </div>
+              <div class="form-group auth-input-group">
+                <label for="dedRegName">Full Name</label>
+                <div class="input-with-icon">
+                  <i class="fa-regular fa-user input-leading-icon"></i>
+                  <input type="text" id="dedRegName" class="form-control" placeholder="e.g. John Doe" required autocomplete="name">
+                </div>
+              </div>
 
-            <button type="submit" class="btn btn-primary" style="width: 100%;">
-              <i class="fa-solid fa-user-plus"></i> Complete Account Registration
+              <div class="auth-form-row">
+                <div class="form-group auth-input-group">
+                  <label for="dedRegEmail">Email Address</label>
+                  <div class="input-with-icon">
+                    <i class="fa-regular fa-envelope input-leading-icon"></i>
+                    <input type="email" id="dedRegEmail" class="form-control" placeholder="name@example.com" required autocomplete="email">
+                  </div>
+                </div>
+                <div class="form-group auth-input-group">
+                  <label for="dedRegPhone">Phone Number</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-phone input-leading-icon"></i>
+                    <input type="tel" id="dedRegPhone" class="form-control" placeholder="+91 98765 00000" required autocomplete="tel">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Driver Specific Fields (Expandable) -->
+              <div id="dedDriverFields" class="driver-details-box" style="display: none;">
+                <div class="driver-box-title">
+                  <i class="fa-solid fa-id-card"></i> Driver & Vehicle Information
+                </div>
+                <div class="form-group auth-input-group">
+                  <label for="dedRegLicense">Driving License Number</label>
+                  <div class="input-with-icon">
+                    <i class="fa-regular fa-id-badge input-leading-icon"></i>
+                    <input type="text" id="dedRegLicense" class="form-control" placeholder="e.g. DL-04-2023-001234">
+                  </div>
+                </div>
+                <div class="auth-form-row">
+                  <div class="form-group auth-input-group">
+                    <label for="dedRegVehicleNo">Vehicle Reg. No.</label>
+                    <div class="input-with-icon">
+                      <i class="fa-solid fa-car input-leading-icon"></i>
+                      <input type="text" id="dedRegVehicleNo" class="form-control" placeholder="e.g. KA-01-AB-1234">
+                    </div>
+                  </div>
+                  <div class="form-group auth-input-group">
+                    <label for="dedRegVehicleType">Vehicle Model & Type</label>
+                    <div class="input-with-icon">
+                      <i class="fa-solid fa-gauge-high input-leading-icon"></i>
+                      <input type="text" id="dedRegVehicleType" class="form-control" placeholder="e.g. Sedan (Honda City)">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group auth-input-group">
+                <label for="dedRegPassword">Create Password</label>
+                <div class="input-with-icon password-field-wrap">
+                  <i class="fa-solid fa-lock input-leading-icon"></i>
+                  <input type="password" id="dedRegPassword" class="form-control" placeholder="At least 6 characters" minlength="6" required autocomplete="new-password">
+                  <button type="button" class="btn-toggle-password" onclick="app.togglePasswordVisibility('dedRegPassword', 'regEyeIcon')" tabindex="-1">
+                    <i class="fa-regular fa-eye" id="regEyeIcon"></i>
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary auth-submit-btn" id="btnRegisterSubmit">
+                <span>Create Account</span> <i class="fa-solid fa-check"></i>
+              </button>
+
+              <div class="auth-switch-footer">
+                <span>Already have an account?</span>
+                <a href="javascript:void(0)" onclick="app.switchAuthTab('login')">Sign In</a>
+              </div>
+            </form>
+          </div>
+
+          <!-- Continue as Guest Option -->
+          <div class="auth-guest-option">
+            <button class="btn btn-ghost btn-sm" onclick="app.navigate('home')">
+              <i class="fa-solid fa-compass"></i> Explore platform as Guest without signing in &rarr;
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </section>
